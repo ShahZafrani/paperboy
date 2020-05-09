@@ -15,6 +15,19 @@ hours = {
     9: "nine",
     10: "ten",
     11: "eleven",
+    12: "twelve",
+    13: "one",
+    14: "two",
+    15: "three",
+    16: "four",
+    17: "five",
+    18: "six",
+    19: "seven",
+    20: "eight",
+    21: "nine",
+    22: "ten",
+    23: "eleven",
+    24: "twelve" # easiest fix for when it's past 23:30 and we're adding 1 to the hour 
 }
 
 minutes = {
@@ -23,19 +36,25 @@ minutes = {
     3: "quarter",
     4: "twenty",
     5: "twentyfive",
-    6: "half"
+    6: "half",
+    7: "twentyfive",
+    8: "twenty",
+    9: "quarter",
+    10: "ten",
+    11: "five"
 }
 
-def updateTime(offset):
-    now = datetime.datetime.now()
-    offsetMinute = now.minute + offset
+def updateTime(offset, now):
+    offsetMinute = (int) (now.minute + offset)
+    print(offsetMinute)
     if offsetMinute < 5:
         return "", getHour(now.hour), "o clock"
     relation = "past"
+    minute = minutes.get((int) (offsetMinute / 5))
     if offsetMinute > 30:
-        return minutes.get((60 - offsetMinute) / 5), "to", getHour(now.hour + 1) 
+        return minute, "to", getHour(now.hour + 1) 
     else:
-        return minutes.get(offsetMinute / 5), "past", getHour(now.hour)
+        return minute, "past", getHour(now.hour)
 
 def getHour(hour):
     if hour > 11: 
@@ -44,5 +63,5 @@ def getHour(hour):
         return hours.get(hour)
 
 if __name__ == "__main__":
-    print(datetime.datetime.now().minute)
-    print(updateTime(-2))
+    now = datetime.datetime.now()
+    print(updateTime(-2, now))
