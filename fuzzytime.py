@@ -51,7 +51,7 @@ def updateTime(offset, now):
         return "", getHour(now.hour), "o clock"
     relation = "past"
     minute = minutes.get((int) (offsetMinute / 5))
-    if offsetMinute > 30:
+    if offsetMinute > 34:
         return minute, "to", getHour(now.hour + 1) 
     else:
         return minute, "past", getHour(now.hour)
@@ -64,4 +64,4 @@ def getHour(hour):
 
 if __name__ == "__main__":
     now = datetime.datetime.now()
-    print(updateTime(-2, now))
+    print(updateTime(2, now))
