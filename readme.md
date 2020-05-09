@@ -12,6 +12,7 @@ E-ink clock in the style of FuzzyTime (Pebble fans know what I'm talking about).
 3. run image.py in debug mode (see flag at top), and verify that test.bmp is updating
 4. connect your waveshare e-paper hat to your raspberryPi and run image.py with debug set to False
 - you can run weather.py or fuzzytime.py individually to test them out
+5. setup a service with system.d so it will run on startup (guide here)[https://www.raspberrypi.org/documentation/linux/usage/systemd.md]
 
 ### acknowledgements
 

@@ -1,0 +1,14 @@
+[Unit]
+Description=E-Paper Clock Service
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python -u image.py
+WorkingDirectory=/home/pi/Documents/paperboy
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
