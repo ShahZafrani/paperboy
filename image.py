@@ -32,7 +32,7 @@ DATE_BOUNDS_LEFT = 6
 
 WBOUNDS_LEFT = 450
 WBOUNDS_TOP = 40
-TEMPBOUNDS_LEFT = 480
+TEMPBOUNDS_LEFT = 465
 TEMPBOUNDS_TOP = 190
 
 def displayImage(image, epd=None):
@@ -52,7 +52,7 @@ def createClockImage(now):
         weather_temp = str(int(round(weather.getTemp(weather_json)))) + u"\u00B0"
     else: 
         weather_icon = weather.broken
-        weather_temp = "gg"+ u"\u00B0"
+        weather_temp = "101"+ u"\u00B0"
     timetext = fuzzytime.getTime(offset, now)
     datetext = fuzzytime.getDate(now)
     image = Image.new('1', (EPD_WIDTH, EPD_HEIGHT), 255)
@@ -95,9 +95,9 @@ def main():
             exit()
     else:
         # tuesday september twentyseventh,twenty twenty two is the longest date string in the near future
-        # twentyfive to twelve is the longest time string ina  day
-        # image = createClockImage(datetime.datetime.fromtimestamp(1664292930))
-        image = createClockImage(datetime.datetime.now())
+        # twentyfive to twelve is the longest time string in a  day
+        image = createClockImage(datetime.datetime.fromtimestamp(1664292930))
+        # image = createClockImage(datetime.datetime.now())
         displayImage(image)
 
 
