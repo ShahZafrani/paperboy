@@ -108,13 +108,12 @@ def updateTime(offset, now):
     offsetMinute = (int) (now.minute + offset)
     print(offsetMinute)
     if offsetMinute < 5:
-        return " ", getHour(now.hour), "o clock"
-    relation = "past"
+        return " \n  {}\n    {}".format(getHour(now.hour), "o'clock")
     minute = minutes.get((int) (offsetMinute / 5))
     if offsetMinute > 34:
-        return minute, "to", getHour(now.hour + 1) 
+        return "{} \n  to \n    {}".format(minute, getHour(now.hour + 1))
     else:
-        return minute, "past", getHour(now.hour)
+        return "{} \n  past \n    {}".format(minute, getHour(now.hour))
 
 def getHour(hour):
     if hour > 11: 

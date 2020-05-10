@@ -5,7 +5,7 @@ fontfile = './fonts/Roboto-Medium.ttf'
 datefontfile = './fonts/Roboto-Medium.ttf'
 weatherfontfile = './fonts/Font Awesome 5 Free-Solid-900.otf'
 offset = 3
-debug = True
+debug = False
 
 from PIL import Image
 from PIL import ImageDraw
@@ -37,39 +37,40 @@ TEMPBOUNDS_LEFT = 480
 TEMPBOUNDS_TOP = 190
 
 def draw_clock(now): 
-    weather_response_code, weather_json = weather.getWeather(cityname, openweather_apikey)
+    try:
+        weather_response_code, weather_json = weather.getWeather(cityname, openweather_apikey)
+    except:
+        print("error getting weather")
+        weather_response_code = 9001
     if (weather_response_code == 200):
         weather_icon = weather.getIconCode(weather_json)
         weather_temp = str(int(round(weather.getTemp(weather_json)))) + u"\u00B0"
     else: 
         weather_icon = weather.broken
         weather_temp = "gg"+ u"\u00B0"
-    line1, line2, line3 = fuzzytime.updateTime(offset, now)
+    timetext = fuzzytime.updateTime(offset, now)
     datetext = fuzzytime.getDate(now)
     if debug == False:
         epd = epd7in5.EPD()
         epd.init()
+        #epd.Clear()
         print("epd init complete")
     else: 
         print(line1)
         print(line2)
         print(line3)
-    image = Image.new('1', (EPD_WIDTH, EPD_HEIGHT), 1)
+    image = Image.new('1', (EPD_WIDTH, EPD_HEIGHT), 255)
     draw = ImageDraw.Draw(image)
     font = ImageFont.truetype(fontfile, TEXT_FONT_SIZE)
     datefont = ImageFont.truetype(datefontfile, DATE_FONT_SIZE)
     wfont = ImageFont.truetype(weatherfontfile, WEATHER_ICON_SIZE)
 
-    if (debug == False):  
-        draw.multiline_text((BOUNDS_LEFT, BOUNDS_TOP), line1 + "\n  " + line2 + "\n    " + line3, fill=0, font=font, anchor=None, spacing=0, align="left")
-        draw.text((DATE_BOUNDS_LEFT, DATE_BOUNDS_TOP), datetext, fill=0, font=datefont)
-    else:  
-        draw.multiline_text((BOUNDS_LEFT, BOUNDS_TOP), "twentyfive" + "\n  " + line2 + "\n    " + line3, fill=0, font=font, anchor=None, spacing=0, align="left")
-        draw.text((DATE_BOUNDS_LEFT, DATE_BOUNDS_TOP), "September Twentyseventh, Twenty Twenty", fill=0, font=datefont)
+    draw.multiline_text((BOUNDS_LEFT, BOUNDS_TOP), timetext, fill=0, font=font, anchor=None, spacing=0, align="left")
+    draw.text((DATE_BOUNDS_LEFT, DATE_BOUNDS_TOP), datetext, fill=0, font=datefont)
     draw.text((WBOUNDS_LEFT, WBOUNDS_TOP), weather_icon, font = wfont, fill = 0)
     draw.text((TEMPBOUNDS_LEFT, TEMPBOUNDS_TOP), weather_temp, font = font, fill = 0)
     if debug == False:
-        epd.display_frame(epd.get_frame_buffer(image))
+        epd.display(epd.getbuffer(image))
     else:
         image.save('./images/test.bmp')
 
