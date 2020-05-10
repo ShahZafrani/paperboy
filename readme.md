@@ -22,6 +22,6 @@ E-ink clock in the style of FuzzyTime (Pebble fans know what I'm talking about).
 
 ### acknowledgements
 
-epidif.py and epd7in5.py are provided by Waveshare
-Weather using OpenWeatherMap
-Weather Icons using [FontAwesome](https://fontawesome.com/)
+- epidif.py and epd7in5.py are provided by Waveshare
+- Weather using OpenWeatherMap
+- Weather Icons using [FontAwesome](https://fontawesome.com/)
