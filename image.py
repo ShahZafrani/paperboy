@@ -70,20 +70,29 @@ def createClockImage(now):
 
 def main():
     if debug == False:
-        epd = epd7in5.EPD()
-        epd.init()
-        epd.Clear()
-        lastMinuteText = "forever"
-        while True:
-            now = datetime.datetime.now()
-            minuteText = fuzzytime.getTime(offset, now)[0]
-            if (minuteText != lastMinuteText):
-                lastMinuteText = minuteText
-                # draw
-                image = createClockImage(now)
-                displayImage(image, epd)
-            # check for a re-draw every minute, after the offset is reached, this should only trigger every five minutes
-            time.sleep(60)
+        try:
+            epd = epd7in5.EPD()
+            epd.init()
+            epd.Clear()
+            lastMinuteText = "forever"
+            while True:
+                now = datetime.datetime.now()
+                minuteText = fuzzytime.getTime(offset, now)[0]
+                if (minuteText != lastMinuteText):
+                    lastMinuteText = minuteText
+                    # draw
+                    image = createClockImage(now)
+                    displayImage(image, epd)
+                # check for a re-draw every minute, after the offset is reached, this should only trigger every five minutes
+                time.sleep(60)
+        except KeyboardInterrupt:   
+            print("keyboard-interrupt")
+            epd7in5.epdconfig.module_exit()
+            exit()
+        except:
+            print("ERROR: check potential stacktrace above")
+            epd7in5.epdconfig.module_exit()
+            exit()
     else:
         # tuesday september twentyseventh,twenty twenty two is the longest date string in the near future
         # twentyfive to twelve is the longest time string ina  day

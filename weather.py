@@ -53,7 +53,7 @@ weather_icons = {
 
 if __name__ == '__main__':
     cityname = "atlanta"
-    apikey = "51eaa17d4260ee5567ea2e6468010e2e"
+    apikey = "GET_YOUR_OWN_KEY"
     status, wjson = getWeather(cityname, apikey)
     print("status: {}".format(status))
     print(wjson)
