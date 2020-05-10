@@ -93,20 +93,31 @@ days = {
     31: "thirtyfirst"
 }
 
+weekdays = {
+    6: "sunday",
+    0: "monday",
+    1: "tuesday",
+    2: "wednesday",
+    3: "thursday",
+    4: "friday",
+    5: "saturday"
+}
+
 years = {
     2020: "twenty twenty",
-    2021: "upgrade this damn clock"
+    2021: "upgrade this damn clock",
+    2022: "twenty twenty two"
 }
 
 def getDate(now):
+    weekday = weekdays.get(now.weekday())
     month = months.get(now.month)
     day = days.get(now.day)
     year = years.get(now.year)
-    return "{} {}, {}".format(month, day, year)
+    return "{} {} {}, {}".format(weekday, month, day, year)
 
-def updateTime(offset, now):
+def getTime(offset, now):
     offsetMinute = (int) (now.minute + offset)
-    print(offsetMinute)
     if offsetMinute < 5:
         return " \n  {}\n    {}".format(getHour(now.hour), "o'clock")
     minute = minutes.get((int) (offsetMinute / 5))
@@ -123,4 +134,4 @@ def getHour(hour):
 
 if __name__ == "__main__":
     now = datetime.datetime.now()
-    print(updateTime(2, now))
+    print(getTime(2, now))
