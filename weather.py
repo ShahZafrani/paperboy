@@ -27,7 +27,7 @@ def convertTemp(k, centigrade):
         temp = (temp * 1.8) + 32
     return temp
 
-broken = "\uf753"
+broken = u"\uf753"
 
 
 weather_icons = {

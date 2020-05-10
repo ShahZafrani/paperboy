@@ -1,10 +1,11 @@
 cityname = "atlanta"
 openweather_apikey = "GET_YOUR_OWN_KEY"
 
-fontfile = './fonts/JandaManateeSolid.ttf'
+fontfile = './fonts/Roboto-Medium.ttf'
+datefontfile = './fonts/Roboto-MediumItalic.ttf'
 weatherfontfile = './fonts/Font Awesome 5 Free-Solid-900.otf'
 offset = 3
-debug = True
+debug = False
 
 from PIL import Image
 from PIL import ImageDraw
@@ -22,25 +23,29 @@ EPD_WIDTH = 640
 EPD_HEIGHT = 384
 TEXT_FONT_SIZE = 72
 TEXT_OFFSET = 8
+DATE_FONT_SIZE = 24
 WEATHER_ICON_SIZE = 144
 BOUNDS_LEFT = 30
 BOUNDS_TOP = 30
+
+DATE_BOUNDS_TOP = 358
+DATE_BOUNDS_LEFT = 62
 
 WBOUNDS_LEFT = 450
 WBOUNDS_TOP = 40
 TEMPBOUNDS_LEFT = 480
 TEMPBOUNDS_TOP = 190
 
-def draw_clock(): 
-    now = datetime.datetime.now()
+def draw_clock(now): 
     weather_response_code, weather_json = weather.getWeather(cityname, openweather_apikey)
     if (weather_response_code == 200):
         weather_icon = weather.getIconCode(weather_json)
-        weather_temp = str(int(round(weather.getTemp(weather_json))))
+        weather_temp = str(int(round(weather.getTemp(weather_json)))) + u"\u00B0"
     else: 
         weather_icon = weather.broken
         weather_temp = "gg"
     line1, line2, line3 = fuzzytime.updateTime(offset, now)
+    datetext = fuzzytime.getDate(now)
     if debug == False:
         epd = epd7in5.EPD()
         epd.init()
@@ -52,12 +57,15 @@ def draw_clock():
     image = Image.new('1', (EPD_WIDTH, EPD_HEIGHT), 1)
     draw = ImageDraw.Draw(image)
     font = ImageFont.truetype(fontfile, TEXT_FONT_SIZE)
+    datefont = ImageFont.truetype(datefontfile, DATE_FONT_SIZE)
     wfont = ImageFont.truetype(weatherfontfile, WEATHER_ICON_SIZE)
 
     if (debug == False):  
         draw.multiline_text((BOUNDS_LEFT, BOUNDS_TOP), line1 + "\n  " + line2 + "\n    " + line3, fill=0, font=font, anchor=None, spacing=0, align="left")
+        draw.text((DATE_BOUNDS_LEFT, DATE_BOUNDS_TOP), datetext, fill=0, font=datefont)
     else:  
         draw.multiline_text((BOUNDS_LEFT, BOUNDS_TOP), "twentyfive" + "\n  " + line2 + "\n    " + line3, fill=0, font=font, anchor=None, spacing=0, align="left")
+        draw.text((DATE_BOUNDS_LEFT, DATE_BOUNDS_TOP), "September Twentyseventh, Twenty Twenty", fill=0, font=datefont)
     draw.text((WBOUNDS_LEFT, WBOUNDS_TOP), weather_icon, font = wfont, fill = 0)
     draw.text((TEMPBOUNDS_LEFT, TEMPBOUNDS_TOP), weather_temp, font = font, fill = 0)
     if debug == False:
@@ -67,13 +75,18 @@ def draw_clock():
 
 def main():
     if debug == False:
+        lastMinuteText = "forever"
         while True:
-            # draw
-            draw_clock()
-            # only redraw after 5 minutes
-            time.sleep(300)
+            now = datetime.datetime.now()
+            minuteText = fuzzytime.updateTime(offset, now)[0]
+            if (minuteText != lastMinuteText):
+                lastMinuteText = minuteText
+                # draw
+                draw_clock(now)
+            # check for a re-draw every minute, after the offset is reached, this should only trigger every five minutes
+            time.sleep(60)
     else:
-        draw_clock()
+        draw_clock(datetime.datetime.now())
 
 
 
