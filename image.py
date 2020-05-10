@@ -2,10 +2,10 @@ cityname = "atlanta"
 openweather_apikey = "GET_YOUR_OWN_KEY"
 
 fontfile = './fonts/Roboto-Medium.ttf'
-datefontfile = './fonts/Roboto-MediumItalic.ttf'
+datefontfile = './fonts/Roboto-Medium.ttf'
 weatherfontfile = './fonts/Font Awesome 5 Free-Solid-900.otf'
 offset = 3
-debug = False
+debug = True
 
 from PIL import Image
 from PIL import ImageDraw
@@ -28,7 +28,7 @@ WEATHER_ICON_SIZE = 144
 BOUNDS_LEFT = 30
 BOUNDS_TOP = 30
 
-DATE_BOUNDS_TOP = 358
+DATE_BOUNDS_TOP = 354
 DATE_BOUNDS_LEFT = 62
 
 WBOUNDS_LEFT = 450
@@ -43,7 +43,7 @@ def draw_clock(now):
         weather_temp = str(int(round(weather.getTemp(weather_json)))) + u"\u00B0"
     else: 
         weather_icon = weather.broken
-        weather_temp = "gg"
+        weather_temp = "gg"+ u"\u00B0"
     line1, line2, line3 = fuzzytime.updateTime(offset, now)
     datetext = fuzzytime.getDate(now)
     if debug == False:
