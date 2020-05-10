@@ -4,7 +4,7 @@
 
 E-ink clock in the style of FuzzyTime (Pebble fans know what I'm talking about).
 
-![paperboy](.\images\paperboy.png)
+![paperboy](./images/paperboy.png)
 
 ## how to use:
 
