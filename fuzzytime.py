@@ -118,8 +118,10 @@ def getDate(now):
 
 def getTime(offset, now):
     offsetMinute = (int) (now.minute + offset)
-    if offsetMinute < 5 or offsetMinute > 59:
-        return " \n  {}\n    {}".format(getHour(now.hour), "o'clock")
+    if offsetMinute < 5: 
+        return " \n  {}\n    {}".format(getHour(now.hour), "o'clock"
+    if  offsetMinute > 59:
+        return " \n  {}\n    {}".format(getHour(now.hour + 1), "o'clock"
     minute = minutes.get((int) (offsetMinute / 5))
     if offsetMinute > 34:
         return "{} \n  to \n    {}".format(minute, getHour(now.hour + 1))
