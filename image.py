@@ -77,7 +77,7 @@ def main():
             lastMinuteText = "forever"
             while True:
                 now = datetime.datetime.now()
-                minuteText = fuzzytime.getTime(offset, now)[0]
+                minuteText = fuzzytime.getTime(offset, now)
                 if (minuteText != lastMinuteText):
                     lastMinuteText = minuteText
                     # draw
@@ -89,15 +89,16 @@ def main():
             print("keyboard-interrupt")
             epd7in5.epdconfig.module_exit()
             exit()
-        except:
+        except Exception as e:
+            print(str(e))
             print("ERROR: check potential stacktrace above")
             epd7in5.epdconfig.module_exit()
             exit()
     else:
         # tuesday september twentyseventh,twenty twenty two is the longest date string in the near future
         # twentyfive to twelve is the longest time string in a  day
-        image = createClockImage(datetime.datetime.fromtimestamp(1664292930))
-        # image = createClockImage(datetime.datetime.now())
+        # image = createClockImage(datetime.datetime.fromtimestamp(1664292930))
+        image = createClockImage(datetime.datetime.now())
         displayImage(image)
 
 
