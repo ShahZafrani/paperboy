@@ -1,6 +1,6 @@
 # returns fuzzytext like time
 # "quarter past six"
-# returns it as three strings so it can be displayed easily on multiple lines
+# returns it as a single string with \n so it can be displayed easily on multiple lines
 import datetime
 hours = {
     0: "twelve",

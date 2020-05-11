@@ -3,12 +3,9 @@ Description=E-Paper Clock Service
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/python -u image.py
+ExecStart=/usr/bin/python -u writeDisplay.py
 WorkingDirectory=/home/paper/paperboy
-StandardOutput=inherit
-StandardError=inherit
-Restart=always
-User=pi
+Type=simple
 
 [Install]
 WantedBy=multi-user.target

@@ -1,0 +1,9 @@
+[Unit]
+Description=Write to Paperboy display every 5 minutes offset by 3
+
+[Timer]
+OnCalendar=*-*-* *:03/5:00
+Unit=paperboy.service
+
+[Install]
+WantedBy=multi-user.target

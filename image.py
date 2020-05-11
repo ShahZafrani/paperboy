@@ -1,22 +1,20 @@
 cityname = "atlanta"
+# TODO: extract this key to a gitignored secrets file
 openweather_apikey = "GET_YOUR_OWN_KEY"
 
 fontfile = './fonts/Roboto-Medium.ttf'
 datefontfile = './fonts/Roboto-Medium.ttf'
 weatherfontfile = './fonts/Font Awesome 5 Free-Solid-900.otf'
+# TODO: find a way to only set this in one place, instead of matching it to the systemd timer trigger
 offset = 3
-debug = True
 
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 import datetime
 import time
-import fuzzytime
-import weather
-
-if debug == False:
-    import epd7in5
+from util import fuzzytime
+from util import weather
 
 EPD_WIDTH = 640
 EPD_HEIGHT = 384
@@ -35,13 +33,10 @@ WBOUNDS_TOP = 40
 TEMPBOUNDS_LEFT = 465
 TEMPBOUNDS_TOP = 190
 
-def displayImage(image, epd=None):
-    if debug == False:
-        epd.display(epd.getbuffer(image))
-    else:
-        image.save('./images/test.bmp')
 
+# TODO: parameterize weather and time/date text
 def createClockImage(now):
+    # weather
     try:
         weather_response_code, weather_json = weather.getWeather(cityname, openweather_apikey)
     except:
@@ -53,55 +48,27 @@ def createClockImage(now):
     else: 
         weather_icon = weather.broken
         weather_temp = "101"+ u"\u00B0"
+    # time    
     timetext = fuzzytime.getTime(offset, now)
     datetext = fuzzytime.getDate(now)
+
+    # image setup
     image = Image.new('1', (EPD_WIDTH, EPD_HEIGHT), 255)
     draw = ImageDraw.Draw(image)
     font = ImageFont.truetype(fontfile, TEXT_FONT_SIZE)
     datefont = ImageFont.truetype(datefontfile, DATE_FONT_SIZE)
     wfont = ImageFont.truetype(weatherfontfile, WEATHER_ICON_SIZE)
-
+    # image draw
     draw.multiline_text((BOUNDS_LEFT, BOUNDS_TOP), timetext, fill=0, font=font, anchor=None, spacing=0, align="left")
     draw.text((DATE_BOUNDS_LEFT, DATE_BOUNDS_TOP), datetext, fill=0, font=datefont)
     draw.text((WBOUNDS_LEFT, WBOUNDS_TOP), weather_icon, font = wfont, fill = 0)
     draw.text((TEMPBOUNDS_LEFT, TEMPBOUNDS_TOP), weather_temp, font = font, fill = 0)
     return image
 
-
-def main():
-    if debug == False:
-        try:
-            epd = epd7in5.EPD()
-            epd.init()
-            epd.Clear()
-            lastMinuteText = "forever"
-            while True:
-                now = datetime.datetime.now()
-                minuteText = fuzzytime.getTime(offset, now)
-                if (minuteText != lastMinuteText):
-                    lastMinuteText = minuteText
-                    # draw
-                    image = createClockImage(now)
-                    displayImage(image, epd)
-                # check for a re-draw every minute, after the offset is reached, this should only trigger every five minutes
-                time.sleep(60)
-        except KeyboardInterrupt:   
-            print("keyboard-interrupt")
-            epd7in5.epdconfig.module_exit()
-            exit()
-        except Exception as e:
-            print(str(e))
-            print("ERROR: check potential stacktrace above")
-            epd7in5.epdconfig.module_exit()
-            exit()
-    else:
-        # tuesday september twentyseventh,twenty twenty two is the longest date string in the near future
-        # twentyfive to twelve is the longest time string in a  day
-        # image = createClockImage(datetime.datetime.fromtimestamp(1664292930))
-        image = createClockImage(datetime.datetime.now())
-        displayImage(image)
-
-
-
 if __name__ == '__main__':
-    main()
+        # tuesday september twentyseventh,twenty twenty two is the longest date string in the near future
+        # twentyfive to twelve is the longest time string in a day
+        longImage = createClockImage(datetime.datetime.fromtimestamp(1664292930))
+        longImage.save('./images/long.bmp')
+        nowImage = createClockImage(datetime.datetime.now())
+        nowImage.save('./images/now.bmp')
