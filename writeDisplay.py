@@ -8,7 +8,6 @@ if __name__ == '__main__':
     try:
         epd = epd7in5.EPD()
         epd.init()
-        epd.Clear()
         now = datetime.datetime.now()
         image = createClockImage(now)
         epd.display(epd.getbuffer(image))
