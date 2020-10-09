@@ -14,61 +14,45 @@ from PIL import ImageFont
 import datetime
 import time
 from util import fuzzytime
-from util import weather
+from util import csv_util
 
 EPD_WIDTH = 640
 EPD_HEIGHT = 384
-TEXT_FONT_SIZE = 84
+TEXT_FONT_SIZE = 36
 TEXT_OFFSET = 8
 DATE_FONT_SIZE = 24
-WEATHER_ICON_SIZE = 144
 BOUNDS_LEFT = 30
 BOUNDS_TOP = 30
+TIME_OFFSET = 50
 
 DATE_BOUNDS_TOP = 354
 DATE_BOUNDS_LEFT = 6
 
-WBOUNDS_LEFT = 450
-WBOUNDS_TOP = 40
-TEMPBOUNDS_LEFT = 465
-TEMPBOUNDS_TOP = 190
-
 
 # TODO: parameterize weather and time/date text
-def createClockImage(now):
-    # weather
-    try:
-        weather_response_code, weather_json = weather.getWeather(cityname, openweather_apikey)
-    except:
-        print("error getting weather")
-        weather_response_code = 9001
-    if (weather_response_code == 200):
-        weather_icon = weather.getIconCode(weather_json)
-        weather_temp = str(int(round(weather.getTemp(weather_json)))) + u"\u00B0"
-    else: 
-        weather_icon = weather.broken
-        weather_temp = "101"+ u"\u00B0"
+def createImage(now):
     # time    
-    timetext = fuzzytime.getTime(offset, now)
-    datetext = fuzzytime.getDate(now)
+    # timetext = fuzzytime.getTime(offset, now)
+    datetext = "{}/{}/{}".format(now.month, now.day, now.year)
+    filepath = csv_util.get_file_path(now, "augusta")
+    today_times = csv_util.get_salat_times(now.day, filepath)
 
     # image setup
     image = Image.new('1', (EPD_WIDTH, EPD_HEIGHT), 255)
     draw = ImageDraw.Draw(image)
     font = ImageFont.truetype(fontfile, TEXT_FONT_SIZE)
     datefont = ImageFont.truetype(datefontfile, DATE_FONT_SIZE)
-    wfont = ImageFont.truetype(weatherfontfile, WEATHER_ICON_SIZE)
     # image draw
-    draw.multiline_text((BOUNDS_LEFT, BOUNDS_TOP), timetext, fill=0, font=font, anchor=None, spacing=0, align="left")
+    # draw.multiline_text((BOUNDS_LEFT, BOUNDS_TOP), timetext, fill=0, font=font, anchor=None, spacing=0, align="left")
+    draw.text((BOUNDS_LEFT, BOUNDS_TOP), "fajr {}".format(today_times[1]), fill=0, font=font)
+    draw.text((BOUNDS_LEFT, BOUNDS_TOP + TIME_OFFSET), "duhr {}".format(today_times[3]), fill=0, font=font)
+    draw.text((BOUNDS_LEFT, BOUNDS_TOP + TIME_OFFSET*2), "asr {}".format(today_times[4]), fill=0, font=font)
+    draw.text((BOUNDS_LEFT, BOUNDS_TOP + TIME_OFFSET*3), "maghrib {}".format(today_times[5]), fill=0, font=font)
+    draw.text((BOUNDS_LEFT, BOUNDS_TOP + TIME_OFFSET*4), "isha {}".format(today_times[6]), fill=0, font=font)
+    
     draw.text((DATE_BOUNDS_LEFT, DATE_BOUNDS_TOP), datetext, fill=0, font=datefont)
-    draw.text((WBOUNDS_LEFT, WBOUNDS_TOP), weather_icon, font = wfont, fill = 0)
-    draw.text((TEMPBOUNDS_LEFT, TEMPBOUNDS_TOP), weather_temp, font = font, fill = 0)
     return image
 
 if __name__ == '__main__':
-        # tuesday september twentyseventh,twenty twenty two is the longest date string in the near future
-        # twentyfive to twelve is the longest time string in a day
-        longImage = createClockImage(datetime.datetime.fromtimestamp(1664292930))
-        longImage.save('./images/long.bmp')
-        nowImage = createClockImage(datetime.datetime.now())
+        nowImage = createImage(datetime.datetime.now())
         nowImage.save('./images/now.bmp')

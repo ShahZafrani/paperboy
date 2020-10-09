@@ -1,7 +1,7 @@
 from waveshare_lib import epd7in5
 import datetime
 import time
-from image import createClockImage
+from image import createImage
 
 
 if __name__ == '__main__':
@@ -9,7 +9,7 @@ if __name__ == '__main__':
         epd = epd7in5.EPD()
         epd.init()
         now = datetime.datetime.now()
-        image = createClockImage(now)
+        image = createImage(now)
         epd.display(epd.getbuffer(image))
         time.sleep(5)
         epd.sleep()
