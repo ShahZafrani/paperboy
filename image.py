@@ -11,6 +11,7 @@ offset = 3
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
+from util.moon_phase import moon_phase
 import datetime
 import time
 from util import fuzzytime
@@ -51,7 +52,9 @@ def createImage(now):
     # draw.text((BOUNDS_LEFT, BOUNDS_TOP + TIME_OFFSET*3), "maghrib {}".format(today_times[5]), fill=0, font=font, direction="rtl")
     # draw.text((BOUNDS_LEFT, BOUNDS_TOP + TIME_OFFSET*4), "isha {}".format(today_times[6]), fill=0, font=font, direction="rtl")
     
-    draw.text((DATE_BOUNDS_LEFT, DATE_BOUNDS_TOP), datetext, fill=0, font=datefont)
+    draw.text((DATE_BOUNDS_LEFT, DATE_BOUNDS_TOP), str(moon_phase(now)), fill=0, font=datefont)
+
+    draw.ellipse((40, 40, 400, 400), fill = 0, outline =0)
     return image
 
 if __name__ == '__main__':

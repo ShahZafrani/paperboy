@@ -15,13 +15,15 @@ if __name__ == '__main__':
         epd.display(epd.getbuffer(image))
         time.sleep(5)
         epd.sleep()
+        epd.Dev_exit()
         exit()
     except KeyboardInterrupt:   
         print("keyboard-interrupt")
-        epd.sleep()
+        epd7in5v2.epdconfig.module_exit()
         exit()
     except Exception as e:
         print(str(e))
         print("ERROR: check stacktrace above")
         epd.sleep()
+        epd7in5v2.epdconfig.module_exit()
         exit()
