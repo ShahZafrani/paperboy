@@ -106,7 +106,9 @@ weekdays = {
 years = {
     2020: "twenty twenty",
     2021: "upgrade this damn clock",
-    2022: "twenty twenty two"
+    2022: "twenty twenty two",
+    2023: "twenty twenty three",
+    2024: "write better code"
 }
 
 def getDate(now):
