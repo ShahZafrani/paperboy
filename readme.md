@@ -15,10 +15,6 @@ E-ink clock in the style of FuzzyTime (Pebble fans know what I'm talking about).
 5. connect your waveshare e-paper hat to your raspberryPi and run writeDisplay.py
 6. setup a service with systemd and a timer so that writeDisplay.py will run every 5 minutes. See ./systemd. [guide here](https://www.certdepot.net/rhel7-use-systemd-timers/)
 
-## coming soon:
-- tests
-- word of the day?
-
 ## the journey:
 - testing my image creation logic at first was cumbersome, so I set a debug flag that would allow me to output an image file instead of writing to the display. This also allowed me to work from a machine that isn't the raspberryPi
 - though this is a hobby project, this is the closest I've come to writing python in a production setting. Tests and Exception handling are new to my in the python space. 
@@ -27,6 +23,13 @@ E-ink clock in the style of FuzzyTime (Pebble fans know what I'm talking about).
 - having a debug mode was cumbersome, so I refactored in order to separate the image creation and display writing
 - After reading the [docs](https://www.waveshare.com/wiki/E-Paper_Driver_HAT) for the display driver, I noticed that it recommends to put the display into sleep mode between writes in order to avoid damaging the unit by leaving the 5v line open. Some refactoring was required to achieve this.
 - I initially used time.sleep(300) in an endless while loop to achieve the 5 minute updates to the display. I have since switched to use systemd with timers. Sure it's more accurate, more reliable, and has logging built-in, but the real reason is cause it's an excuse to learn something new about linux.
+
+## printing the frame
+- my frame is printed with wood pla
+- you can find the stl in the models folder
+- The frame has an integrated wall hook, and a cable exit that allows the cable to come out cleanly whether it's standing on a desk or wall mounted ![clock_frame](./images/clock_frame_stl.png)
+- The frame  is designed to be used with threaded inserts so that you can use machine screws to assemble/disassemble
+- The backplate is designed with holes for a pi3b to screw into, also with the expectation of using threaded inserts  ![clock_backplate](./images/clock_backplate_stl.png)
 
 ## acknowledgements
 - epidif.py and epd7in5.py are provided by [Waveshare](https://github.com/waveshare/e-Paper)
